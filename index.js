@@ -49,6 +49,13 @@ app.use(function (req, res, next) {
 
 routes(app);
 
+// error page
+app.use(function (err, req, res, next) {
+  res.render('error', {
+    error: err
+  });
+});
+
 app.listen(config.port, function () {
   console.log(`${pkg.name} listening on port ${config.port}`);
 });
