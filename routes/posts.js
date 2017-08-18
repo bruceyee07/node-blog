@@ -56,7 +56,24 @@ router.get('/create', checkLogin, function (req, res, next) {
 });
 
 router.get('/:postId', function (req, res, next) {
-	res.send(req.flash());
+	var postId = req.params.postId;
+
+	Promise.all([
+		PostModel.getPostById(postId),
+		PostModel.incPv(postId)
+	])
+	.then(function (result) {
+		var post = result[0];
+
+		if (!post) {
+			throw new Error('该文章不存在');
+		}
+
+		res.render('post', {
+			post: post
+		});
+	})
+	.catch(next);
 });
 
 router.get('/:postId/edit', checkLogin, function (req, res, next) {
