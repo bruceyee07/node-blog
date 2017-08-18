@@ -4,8 +4,17 @@ var PostModel = require('../models/posts');
 
 var checkLogin = require('../middlewares/check').checkLogin;
 
-router.get('/', function (req, res, next) {
-	res.render('posts');
+router.get('/', function(req, res, next) {
+  var author = req.query.author;
+
+  PostModel
+  	.getPosts(author)
+    .then(function (posts) {
+      res.render('posts', {
+        posts: posts
+      });
+    })
+    .catch(next);
 });
 
 router.post('/', checkLogin, function (req, res, next) {
